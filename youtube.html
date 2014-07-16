@@ -58,6 +58,10 @@
           return window.navigator.onLine;
         }
 
+        function setAppOffline() {
+          document.body.classList.add( 'pp-is-offline' )
+        }
+
         function triggerSnapshotReady() {
           var iframe = document.createElement( 'iframe' );
           iframe.setAttribute( 'src', 'pugpig://onPageReady' );
@@ -83,14 +87,13 @@
                   this.handleLoadEvent.bind( this, numYouTubeEmbeds )
                 );
               } else {
-                document.body.classList.add( 'pp-is-offline' );
                 el.parentNode.innerHTML = this.offlineContent;
               }
             }
           },
           handleLoadEvent: function( numYouTubeEmbeds ) {
             this.loaded++;
-            if ( this.loaded === numYouTubeEmbeds ) {
+            if ( inApp() && this.loaded === numYouTubeEmbeds ) {
               triggerSnapshotReady();
             }
           },
@@ -100,11 +103,13 @@
           }
         }
 
-        if ( inApp() ) {
-          document.addEventListener(
-            'DOMContentLoaded',
-            pugpigYouTube.init.bind( pugpigYouTube )
-          );
+        document.addEventListener(
+          'DOMContentLoaded',
+          pugpigYouTube.init.bind( pugpigYouTube )
+        );
+
+        if ( !isOnline() ) {
+          setAppOffline();
         }
       })( window, document );
     </script>
