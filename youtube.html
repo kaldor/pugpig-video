@@ -53,6 +53,11 @@
           return window.location.protocol.search(/http(s)?/) === -1;
         }
 
+        function isOnline() {
+          // TODO: Replace with more robust offline detection
+          return window.navigator.onLine;
+        }
+
         function triggerSnapshotReady() {
           var iframe = document.createElement( 'iframe' );
           iframe.setAttribute( 'src', 'pugpig://onPageReady' );
@@ -72,7 +77,7 @@
 
             for( i = 0; i < numyoutubeEmbeds; i+=1 ) {
               var el = this.els[ i ];
-              if ( window.navigator.onLine ) {
+              if ( isOnline() ) {
                 el.addEventListener(
                   'load',
                   this.handleLoadEvent.bind( this, numyoutubeEmbeds )
