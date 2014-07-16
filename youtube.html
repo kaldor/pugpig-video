@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+  <head>
+    <title>YouTube Hello World</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="delaySnapshotUntilReady" content="yes" />
+    <style>
+      .pugpig-youtube {
+        position: relative;
+        padding-top: 56.25%;
+      }
+
+      .pugpig-youtube__player {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+
+      .pp-is-offline .pugpig-youtube {
+        padding-top: initial;
+      }
+
+      .pp-is-offline .pugpig-youtube__player {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+
+    <h1>YouTube example</h1>
+
+    <h2>Killian Martin: A skate escalation</h2>
+
+    <div class="pugpig-youtube">
+      <iframe class="pugpig-youtube__player" src="http://www.youtube.com/embed/WDH6Q22d1zo" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+    </div>
+
+    <h2>Killian Martin: A skate regeneration</h2>
+
+    <div class="pugpig-youtube">
+      <iframe class="pugpig-youtube__player" src="http://www.youtube.com/embed/6mgFdn4lfrE" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+    </div>
+
+    <script>
+      (function( window, document, undefined ) {
+        'use strict';
+
+        function inApp() {
+          return window.location.protocol.search(/http(s)?/) === -1;
+        }
+
+        function triggerSnapshotReady() {
+          var iframe = document.createElement( 'iframe' );
+          iframe.setAttribute( 'src', 'pugpig://onPageReady' );
+          document.documentElement.appendChild( iframe );
+          iframe.parentNode.removeChild( iframe );
+          iframe = null;
+        }
+
+        var pugpigYouTube = {
+          selector: '.pugpig-youtube',
+          els: null,
+          loaded: 0,
+          offlineContent: '<p>This video is not available offline</p>',
+          bindEvents: function() {
+            var numyoutubeEmbeds = this.els.length,
+              i;
+
+            for( i = 0; i < numyoutubeEmbeds; i+=1 ) {
+              var el = this.els[ i ];
+              if ( window.navigator.onLine ) {
+                el.addEventListener(
+                  'load',
+                  this.handleLoadEvent.bind( this, numyoutubeEmbeds )
+                );
+              } else {
+                document.body.classList.add( 'pp-is-offline' );
+                el.parentNode.innerHTML = this.offlineContent;
+              }
+            }
+          },
+          handleLoadEvent: function( numyoutubeEmbeds ) {
+            this.loaded++;
+            if ( this.loaded === numyoutubeEmbeds ) {
+              triggerSnapshotReady();
+            }
+          },
+          init: function() {
+            this.els = document.querySelectorAll( this.selector + '__player' );
+            this.bindEvents();
+          }
+        }
+
+        if ( inApp() ) {
+          document.addEventListener(
+            'DOMContentLoaded',
+            pugpigYouTube.init.bind( pugpigYouTube )
+          );
+        }
+      })( window, document );
+    </script>
+  </body>
+</html>
