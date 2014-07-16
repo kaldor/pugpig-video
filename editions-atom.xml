@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:opds="http://opds-spec.org/2010/catalog" xmlns:app="http://www.w3.org/2007/app">
+
+  <id>PugpigVideoHelloWorldExamples</id>
+  <title>Pugpig Video Hello World Examples</title>
+  <author>
+    <name>Kaldor Group</name>
+  </author>
+  <subtitle>Atom External Feed</subtitle>
+  <updated>2013-06-05T10:33:44+00:00</updated>
+
+  <entry>
+    <title>Pugpig Video Hello World Examples</title>
+    <id>1</id>
+    <updated>2013-04-01T00:12:00+00:00</updated>
+    <dcterms:issued>2013-10-01</dcterms:issued>
+    <author>
+      <name>Pugpig</name>
+    </author>
+    <link rel="http://opds-spec.org/acquisition" type="application/atom+xml" href="atom.xml"/>
+    <link rel="alternate" type="application/atom+xml" href="atom.xml"/>
+    <link rel="http://opds-spec.org/image" type="image/jpg" href="http://placehold.it/300x400"/>
+  </entry>
+
+</feed>

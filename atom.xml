@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app" xmlns:dcterms="http://purl.org/dc/terms/">
+
+  <id>1</id>
+  <title>Videos</title>
+  <updated>2013-09-23T10:50:45.274Z</updated>
+  <author>
+    <name>Pugpig</name>
+  </author>
+  <link rel="self" type="application/atom+xml" href="atom.xml" />
+
+  <entry>
+    <title>Vimeo</title>
+    <id>Vimeo</id>
+    <updated>2013-09-23T10:50:45.274Z</updated>
+    <published>2013-09-17T11:06:50.272Z</published>
+    <link rel="alternate" type="text/html" href="vimeo.html" />
+    <link rel="related" type="text/cache-manifest" href="everything.manifest" />
+  </entry>
+
+</feed>
