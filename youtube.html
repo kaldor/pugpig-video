@@ -72,15 +72,15 @@
           loaded: 0,
           offlineContent: '<p>This video is not available offline</p>',
           bindEvents: function() {
-            var numyoutubeEmbeds = this.els.length,
+            var numYouTubeEmbeds = this.els.length,
               i;
 
-            for( i = 0; i < numyoutubeEmbeds; i+=1 ) {
+            for( i = 0; i < numYouTubeEmbeds; i+=1 ) {
               var el = this.els[ i ];
               if ( isOnline() ) {
                 el.addEventListener(
                   'load',
-                  this.handleLoadEvent.bind( this, numyoutubeEmbeds )
+                  this.handleLoadEvent.bind( this, numYouTubeEmbeds )
                 );
               } else {
                 document.body.classList.add( 'pp-is-offline' );
@@ -88,9 +88,9 @@
               }
             }
           },
-          handleLoadEvent: function( numyoutubeEmbeds ) {
+          handleLoadEvent: function( numYouTubeEmbeds ) {
             this.loaded++;
-            if ( this.loaded === numyoutubeEmbeds ) {
+            if ( this.loaded === numYouTubeEmbeds ) {
               triggerSnapshotReady();
             }
           },
