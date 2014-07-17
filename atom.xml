@@ -36,4 +36,13 @@
     <link rel="related" type="text/cache-manifest" href="youtube-api.manifest" />
   </entry>
 
+  <entry>
+    <title>Brightcove</title>
+    <id>Brightcove</id>
+    <updated>2013-09-23T10:50:45.274Z</updated>
+    <published>2013-09-17T11:06:50.272Z</published>
+    <link rel="alternate" type="text/html" href="brightcove.html" />
+    <link rel="related" type="text/cache-manifest" href="brightcove.manifest" />
+  </entry>
+
 </feed>

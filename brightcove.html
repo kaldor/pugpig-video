@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Brightcove Hello World</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="delaySnapshotUntilReady" content="yes" />
+    <style>
+      .pugpig-brightcove {
+        position: relative;
+        padding-top: 56.25%;
+      }
+
+      .pugpig-brightcove object,
+      .pugpig-brightcove iframe,
+      .pugpig-brightcove span {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+
+    <h1>Brightcove example</h1>
+
+    <h2>Example 1</h2>
+
+    <div class="pugpig-brightcove" data-video-id="3658535466001"></div>
+
+    <h2>Example 2</h2>
+
+    <div class="pugpig-brightcove" data-video-id="3658535465001"></div>
+
+    <script src="scripts/BrightcoveExperiences.js"></script>
+    <script>
+      (function( window, document, undefined ) {
+        function inApp() {
+          return window.location.protocol.search(/http(s)?/) === -1;
+        }
+
+        function isOnline() {
+          // TODO: Replace with more robust offline detection
+          return window.navigator.onLine;
+        }
+
+        function setAppOffline() {
+          document.body.classList.add( 'pp-is-offline' )
+        }
+
+        function triggerSnapshotReady() {
+          var iframe = document.createElement( 'iframe' );
+          iframe.setAttribute( 'src', 'pugpig://onPageReady' );
+          document.documentElement.appendChild( iframe );
+          iframe.parentNode.removeChild( iframe );
+          iframe = null;
+        }
+
+        function getElementVideoId( el ) {
+          return el.getAttribute( 'data-video-id' );
+        }
+
+        var pugpigBrightcove = {
+          selector: '.pugpig-brightcove',
+          els: null,
+          apiKey: 'AQ~~,AAADU8xBz9E~,pvB3bYAKCLsMfHt7fkM6SjABpM1hj4p3',
+          offlineContent: '<p>This video is not available offline</p>',
+          defaultParams: [{
+            name: 'bgcolor',
+            value: '#FFFFFFF'
+          }, {
+            name: 'isVid',
+            value: true
+          }, {
+            name: 'isUI',
+            value: true
+          }, {
+            name: 'dynamicStreaming',
+            value: true
+          }],
+          getElementParams: function( el ) {
+            return this.defaultParams.concat([{
+              name: 'playerKey',
+              value: this.apiKey
+            }, {
+              name: '@videoPlayer',
+              value: getElementVideoId( el )
+            }]);
+          },
+          embedVideo: function( el, videoIndex ) {
+            var fragment = document.createDocumentFragment(),
+              object = document.createElement( 'object' ),
+              params = this.getElementParams( el ),
+              numParams = params.length,
+              param, i;
+
+            for( i = 0; i < numParams; i+=1 ) {
+              param = document.createElement( 'param' );
+              param.setAttribute( 'name', params[ i ].name );
+              param.setAttribute( 'value', params[ i ].value );
+              fragment.appendChild( param );
+            }
+
+            object.setAttribute( 'id', 'brightcove' + ( videoIndex + 1 ) );
+            object.className = 'BrightcoveExperience';
+            object.appendChild( fragment );
+
+            el.appendChild( object );
+          },
+          embedVideos: function( useOfflineContent ) {
+            var numBrightcoveEmbeds = this.els.length,
+              el, i;
+
+            for( i = 0; i < numBrightcoveEmbeds; i+=1 ) {
+              el = this.els[ i ];
+              if ( useOfflineContent ) {
+                el.innerHTML = this.offlineContent;
+              } else {
+                this.embedVideo( el, i );
+              }
+            }
+
+            this.initBrightcove();
+          },
+          initBrightcove: function() {
+            brightcove.createExperiences();
+          },
+          init: function() {
+            this.els = document.querySelectorAll( this.selector );
+            if ( isOnline() ) {
+              this.embedVideos();
+            } else {
+              this.embedVideos( true );
+            }
+          }
+        };
+
+        document.addEventListener(
+          'DOMContentLoaded',
+          pugpigBrightcove.init.bind( pugpigBrightcove )
+        );
+
+        if ( !isOnline() ) {
+          setAppOffline();
+        }
+      })( window, document );
+    </script>
+
+  </body>
+</html>
