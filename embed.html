@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Vimeo Hello World</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="delaySnapshotUntilReady" content="yes" />
+    <style>
+
+      *{
+        padding: 0;
+        margin: 0;
+      }
+
+      h1{ padding: 20px;}
+
+      .video-wrap{
+        width: 100%;
+        padding-top: 43.4%;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .video{
+        position: absolute;
+        width: 100%;
+        top: 0;
+      }
+
+    </style>
+  </head>
+  <body>
+
+    <h1>Embed example</h1>
+
+    <div class="video-wrap">
+
+      <video class="video" controls>
+        <source src="movie.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+
+    </div>
+
+  </body>
+</html>
