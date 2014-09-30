@@ -45,4 +45,22 @@
     <link rel="related" type="text/cache-manifest" href="brightcove.manifest" />
   </entry>
 
+  <entry>
+    <title>Embeded MP4</title>
+    <id>embeded</id>
+    <updated>2013-09-23T10:50:45.274Z</updated>
+    <published>2013-09-17T11:06:50.272Z</published>
+    <link rel="alternate" type="text/html" href="embed.html" />
+    <link rel="related" type="text/cache-manifest" href="embed.manifest" />
+  </entry>
+
+  <entry>
+    <title>Stream MP4</title>
+    <id>stream</id>
+    <updated>2013-09-23T10:50:45.274Z</updated>
+    <published>2013-09-17T11:06:50.272Z</published>
+    <link rel="alternate" type="text/html" href="stream.html" />
+    <link rel="related" type="text/cache-manifest" href="stream.manifest" />
+  </entry>
+
 </feed>
