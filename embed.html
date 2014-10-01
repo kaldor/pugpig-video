@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Vimeo Hello World</title>
+    <title>Embeded mp4 Hello World</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <meta name="delaySnapshotUntilReady" content="yes" />
     <style>
@@ -9,6 +9,11 @@
       *{
         padding: 0;
         margin: 0;
+      }
+
+      body{
+        background-color: #67b2e8;
+        color: white;
       }
 
       h1{ padding: 20px;}
@@ -30,11 +35,11 @@
   </head>
   <body>
 
-    <h1>Embed example</h1>
+    <h1>Embeded mp4 example</h1>
 
     <div class="video-wrap">
 
-      <video class="video" controls>
+      <video class="video" poster="poster.jpg" controls>
         <source src="movie.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
