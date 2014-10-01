@@ -1,16 +1,48 @@
 <!doctype html>
 <html>
   <head>
-    <title>Vimeo Hello World</title>
+    <title>Stream mp4 Hello World</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <meta name="delaySnapshotUntilReady" content="yes" />
     <style>
-      
+
+      *{
+        padding: 0;
+        margin: 0;
+      }
+
+      body{
+        background-color: black;
+        color: white;
+      }
+
+      h1{ padding: 20px;}
+
+      .video-wrap{
+        width: 100%;
+        padding-top: 43.4%;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .video{
+        position: absolute;
+        width: 100%;
+        top: 0;
+      }
+
     </style>
   </head>
   <body>
 
-    <h1>Stream example</h1>
+    <h1>Stream mp4 example</h1>
 
+    <div class="video-wrap">
+
+      <video class="video" src="https://github.com/kaldor/pugpig-video/blob/master/movie.mp4?raw=true" type="video/mp4" preload="flase" poster="poster.jpg" controls>
+        Your browser does not support the video tag.
+      </video>
+
+    </div>
   </body>
 </html>
