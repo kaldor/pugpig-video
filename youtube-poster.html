@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+  <head>
+    <title>YouTube Hello World</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="callbackWhenSnapshotFinished" content="loadVideos">
+    <script type="text/javascript">
+      window.PUGPIG = {};
+    </script>
+    <style>
+      .pugpig-video {
+        position: relative;
+        padding-top: 56.25%;
+        overflow-y: hidden;
+      }
+
+      .pugpig-video__player ,
+      .pugpig-video__poster {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+      .pugpig-video__poster img {
+        width: 100%;
+        margin-top: -6.75%;
+      }
+
+      .pp-is-offline .pugpig-youtube {
+        padding-top: initial;
+      }
+
+      .pp-is-offline .pugpig-youtube__player {
+        display: none;
+      }
+
+      .is-hidden{
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+
+    <h1>YouTube example</h1>
+
+    <h2>Killian Martin: A skate escalation</h2>
+
+      <figure data-image-nozoom="" class="pugpig-video pugpig-youtube media media--hero" data-video-id="WDH6Q22d1zo">
+          <div id="video-player-WDH6Q22d1zo" class="pugpig-video__player is-hidden"></div>
+          <div class="pugpig-video__poster">
+            <img src="http://img.youtube.com/vi/WDH6Q22d1zo/0.jpg" alt="">
+          </div>
+      </figure>
+
+    <h2>Killian Martin: A skate regeneration</h2>
+
+
+    <figure data-image-nozoom="" class="pugpig-video pugpig-youtube media media--hero" data-video-id="6mgFdn4lfrE">
+          <div id="video-player-6mgFdn4lfrE" class="pugpig-video__player is-hidden"></div>
+          <div class="pugpig-video__poster">
+            <img src="http://img.youtube.com/vi/6mgFdn4lfrE/0.jpg" alt="">
+          </div>
+      </figure>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function(){
+          if(!inApp()){
+            loadVideos();
+          }
+        });
+
+        function inApp() {
+          return window.location.protocol.search(/http(s)?/) === -1;
+        }
+
+        function isOnline() {
+          // TODO: Replace with more robust offline detection
+          return window.navigator.onLine;
+        }
+
+        function setAppOffline() {
+          document.body.classList.add( 'pp-is-offline' );
+        }
+
+        function setAppOnline() {
+          document.body.className = document.body.className.replace('pp-is-offline', '');
+        }
+
+        function isAndroid(){
+          return navigator.userAgent.toLowerCase().indexOf('android') > -1;
+        }
+
+        // This function creates an <iframe> (and YouTube player) after the API code downloads.
+        function onYouTubeIframeAPIReady() {
+          for (var playerId in PUGPIG.players) {
+            var playerInfo = PUGPIG.players[playerId];
+            playerInfo['player'] = new YT.Player(playerId, playerInfo['options']);
+          }
+        }
+
+        function onPlayerReady(event) {
+          var video = document.querySelector('#video-player-' + event.target.getVideoData().video_id).parentElement,
+              vidPlayer = video.getElementsByClassName('pugpig-video__player')[0],
+              vidPoster = video.getElementsByClassName('pugpig-video__poster')[0];
+
+          if (vidPlayer !== null) {
+            if (navigator.onLine) {
+              vidPoster.classList.add('is-hidden');
+              vidPlayer.className = vidPlayer.className.replace('is-hidden', '');
+            }
+          }
+        }
+
+        function updateOnlineStatus(status) {
+          var currentlyOnline = status;
+          if(status === undefined){
+            currentlyOnline = navigator.onLine;
+          }
+
+          if (!PUGPIG.hasOwnProperty('isOnLine') || PUGPIG.isOnLine !== currentlyOnline ){
+            PUGPIG.isOnLine = currentlyOnline;
+            if (PUGPIG.isOnLine) {
+              setAppOnline();
+            } else {
+              setAppOffline();
+            }
+          }
+        }
+
+        function loadVideos() {
+          // load the youtube iframe script
+          var tag = document.createElement('script');
+          tag.src = 'https://www.youtube.com/iframe_api';
+          var firstScriptTag = document.getElementsByTagName('script')[0];
+          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+          // initialise the player data
+          PUGPIG.players = {};
+          var video = document.querySelectorAll('.pugpig-youtube');
+          for (var i=0; i<video.length; i++) {
+            PUGPIG.players['video-player-'+ video[i].dataset.videoId] =  {
+              player: null, 
+              options: {
+                videoId: video[i].dataset.videoId,
+                events: {
+                  'onReady': onPlayerReady
+                }
+              }
+            };
+          }
+
+          // set up the online/offline status updating
+          if(isAndroid() && inApp()){
+            //disable cache
+            fetch('http://pugpig.com/favicon-16x16.png?timestamp=' + new Date().getTime());
+            setInterval(function() { fetch('http://pugpig.com/favicon-16x16.png?timestamp=' + new Date().getTime()); } , 4000);
+          }else{
+            // set up the online/offline status updating
+            // on IE8+ and FF3+
+            document.addEventListener('online',  updateOnlineStatus);
+            document.addEventListener('offline', updateOnlineStatus);
+            // and a slow poll for the catch-all
+            setInterval(updateOnlineStatus, 4000);
+            // and update status immediately too
+            updateOnlineStatus();
+          }
+
+        }
+
+        //onLine / offline detection for android
+        if(isAndroid() && inApp()){
+          //disable cache
+          fetch('http://pugpig.com/favicon-16x16.png?timestamp=' + new Date().getTime());
+          window.addEventListener('connectionerror', function() {
+            updateOnlineStatus(false);
+          });
+          window.addEventListener('connectiontimeout', function() {
+            updateOnlineStatus(false);
+          });
+          window.addEventListener('goodconnection', function() {
+            updateOnlineStatus(true);
+          });
+        }else if(!isOnline()){
+          updateOnlineStatus(false);
+        }
+
+        
+    </script>
+    <script type="text/javascript">
+      //online / offline detection for android
+      var maxWaitTime = 2000;
+      var fetch = function(url, callback) {
+        var xhr = new XMLHttpRequest();
+        var noResponseTimer = setTimeout(function() {
+          xhr.abort();
+          fireEvent('connectiontimeout', {});
+        }, maxWaitTime);
+
+        xhr.onreadystatechange = function(e) {
+          if (xhr.readyState != 4) {
+            return;
+          }
+
+          if (xhr.status == 200) {
+
+            clearTimeout(noResponseTimer);
+            fireEvent('goodconnection', {});
+          } else {
+            fireEvent('connectionerror', {});
+          }
+        };
+        xhr.open('GET', url);
+        xhr.send();
+      };
+
+      var fireEvent = function(name, data) {
+        var e = document.createEvent('Event');
+        e.initEvent(name, true, true);
+        e.data = data;
+        window.dispatchEvent(e);
+      };
+    </script>
+  </body>
+</html>
