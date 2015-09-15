@@ -19,6 +19,15 @@
   </entry>
 
   <entry>
+    <title>Vimeo Poster</title>
+    <id>vimeo-poster</id>
+    <updated>2015-09-15T00:00:00.000Z</updated>
+    <published>2015-09-15T00:00:00.000Z</published>
+    <link rel="alternate" type="text/html" href="vimeo-poster.html" />
+    <link rel="related" type="text/cache-manifest" href="vimeo-poster.manifest" />
+  </entry>
+
+  <entry>
     <title>YouTube</title>
     <id>YouTube</id>
     <updated>2013-09-23T10:50:45.274Z</updated>
@@ -34,6 +43,24 @@
     <published>2013-09-17T11:06:50.272Z</published>
     <link rel="alternate" type="text/html" href="youtube-api.html" />
     <link rel="related" type="text/cache-manifest" href="youtube-api.manifest" />
+  </entry>
+
+  <entry>
+    <title>YouTube Poster</title>
+    <id>youtube-poster</id>
+    <updated>2015-09-15T00:00:00.000Z</updated>
+    <published>2015-09-15T00:00:00.000Z</published>
+    <link rel="alternate" type="text/html" href="youtube-poster.html" />
+    <link rel="related" type="text/cache-manifest" href="youtube-poster.manifest" />
+  </entry>
+
+  <entry>
+    <title>YouTube Clickable Poster</title>
+    <id>youtube-clickable-poster</id>
+    <updated>2015-09-15T00:00:00.000Z</updated>
+    <published>2015-09-15T00:00:00.000Z</published>
+    <link rel="alternate" type="text/html" href="youtube-clickable-poster.html" />
+    <link rel="related" type="text/cache-manifest" href="youtube-clickable-poster.manifest" />
   </entry>
 
 <!--   <entry>
