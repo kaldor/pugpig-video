@@ -1,0 +1,194 @@
+<!doctype html>
+<html>
+<head>
+	<title>Vimeo Poster Hello World</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<meta name="callbackWhenSnapshotFinished" content="loadVideos" />
+	<script type="text/javascript">
+		window.PUGPIG = {};
+	</script>
+	<style>
+		.pugpig-vimeo {
+			position: relative;
+			padding-top: 56.25%;
+		}
+
+		.pugpig-vimeo__player,
+		.pugpig-vimeo__poster {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+		}
+		
+		.pugpig-vimeo__poster img{
+			width: 100%;
+			height: auto;
+		}
+		
+		.pp-is-offline .pugpig-vimeo__player {
+			display: none;
+		}
+
+		.pp-is-offline .pugpig-vimeo__poster {
+			display: block;
+		}
+		
+		.is-hidden{
+			display: none;
+		}
+	</style>
+</head>
+<body>
+
+	<h1>Vimeo example</h1>
+
+	<h2>Killian Martin: A skate escalation</h2>
+
+	<figure class="pugpig-vimeo" data-video-id="15495369">
+		<div class="pugpig-vimeo__poster">
+			<img src="http://placehold.it/1000x562" alt="">
+		</div>
+	</figure>
+
+	<h2>Killian Martin: A skate regeneration</h2>
+
+	<figure class="pugpig-vimeo" data-video-id="16644176">
+		<div class="pugpig-vimeo__poster">
+			<img src="http://placehold.it/1000x562" alt="">
+		</div>
+	</figure>
+
+	<script type="text/javascript">
+		// utilities
+		function inApp() {
+			return window.location.protocol.search(/http(s)?/) === -1;
+		}
+		function isOnline() {
+			//Works for everything except in app android
+			return window.navigator.onLine;
+		}
+		function setAppOffline() {
+			document.body.classList.add( 'pp-is-offline' );
+		}
+		function setAppOnline() {
+			document.body.className = document.body.className.replace('pp-is-offline', '');
+		}
+		function isAndroid(){
+			return navigator.userAgent.toLowerCase().indexOf('android') > -1;
+		}
+		function updateOnlineStatus(status) {
+			var currentlyOnline = status;
+			if(status === undefined){
+				currentlyOnline = navigator.onLine;
+			}
+			if (!PUGPIG.hasOwnProperty('isOnLine') || PUGPIG.isOnLine !== currentlyOnline ){
+				PUGPIG.isOnLine = currentlyOnline;
+				if (PUGPIG.isOnLine) {
+					setAppOnline();
+				} else {
+					setAppOffline();
+				}
+			}
+		}
+	</script>
+	<script type="text/javascript">
+		//online / offline detection for android in app
+		var maxWaitTime = 4000;
+		var fetch = function(url, callback) {
+			var xhr = new XMLHttpRequest();
+			var noResponseTimer = setTimeout(function() {
+				xhr.abort();
+				fireEvent('connectiontimeout', {});
+			}, maxWaitTime);
+			xhr.onreadystatechange = function(e) {
+				if (xhr.readyState != 4) {
+					return;
+				}
+				if (xhr.status == 200) {
+					clearTimeout(noResponseTimer);
+					fireEvent('goodconnection', {});
+				} else {
+					fireEvent('connectionerror', {});
+				}
+			};
+			xhr.open('GET', url);
+			xhr.send();
+		};
+		var fireEvent = function(name, data) {
+			var e = document.createEvent('Event');
+			e.initEvent(name, true, true);
+			e.data = data;
+			window.dispatchEvent(e);
+		};
+	</script>
+
+
+
+	<script type="text/javascript">
+
+		document.addEventListener('DOMContentLoaded', function(){
+			// if(!inApp()){
+				loadVideos();
+			// }
+		});
+		function loadVideos(){
+
+			//load the videos
+			var players = document.querySelectorAll('.pugpig-vimeo');
+			for (var i = 0; i < players.length; i++) {
+				var playerId = players[i].dataset.videoId,
+					player = document.createElement('iframe'); //Create the video iframe
+				player.setAttribute('id', playerId);
+				player.src = 'http://player.vimeo.com/video/' + playerId + '?api=1&player_id=' + playerId;
+				player.className = 'pugpig-vimeo__player is-hidden';
+				player.setAttribute('frameborder', 0);
+				player.setAttribute('webkitallowfullscreen', '');
+				player.setAttribute('mozallowfullscreen', '');
+				player.setAttribute('allowfullscreen', '');
+				player.addEventListener('load', function(){
+					this.parentNode.querySelectorAll('.pugpig-vimeo__poster')[0].className += ' is-hidden';
+					this.className = this.className.replace('is-hidden', '');
+				});
+				players[i].insertBefore(player, players[i].childNodes[0]); //attach the iframe to the DOM
+			}
+
+			//Verify online status
+			if(isAndroid() && inApp()){
+				//disable cache
+				fetch('http://pugpig.com/favicon-16x16.png?timestamp=' + new Date().getTime());
+				setInterval(function() { fetch('http://pugpig.com/favicon-16x16.png?timestamp=' + new Date().getTime()); } , 4000);
+			}else{
+				// set up the online/offline status updating
+				// on IE8+ and FF3+
+				document.addEventListener('online',updateOnlineStatus);
+				document.addEventListener('offline', updateOnlineStatus);
+				// and a slow poll for the catch-all
+				setInterval(updateOnlineStatus, 4000);
+				// and update status immediately too
+				updateOnlineStatus();
+			}
+		}
+
+		//onLine / offline detection for android
+		if(isAndroid() && inApp()){
+			//disable cache
+			fetch('http://pugpig.com/favicon-16x16.png?timestamp=' + new Date().getTime());
+			window.addEventListener('connectionerror', function() {
+				updateOnlineStatus(false);
+			});
+			window.addEventListener('connectiontimeout', function() {
+				updateOnlineStatus(false);
+			});
+			window.addEventListener('goodconnection', function() {
+				updateOnlineStatus(true);
+			});
+		}else if(!isOnline()){
+			updateOnlineStatus(false);
+		}
+	</script>
+</body>
+</html>
