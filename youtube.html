@@ -90,6 +90,9 @@
                 el.parentNode.innerHTML = this.offlineContent;
               }
             }
+            if( inApp() && numYouTubeEmbeds === 0 ){
+              triggerSnapshotReady();
+            }
           },
           handleLoadEvent: function( numYouTubeEmbeds ) {
             this.loaded++;

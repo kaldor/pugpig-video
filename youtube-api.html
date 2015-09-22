@@ -102,6 +102,9 @@
                 });
               }
             }
+            if( inApp() && numYouTubeEmbeds === 0 ){
+              triggerSnapshotReady();
+            }
           },
           handleOnReadyEvent: function( numYouTubeEmbeds ) {
             this.loaded++;
