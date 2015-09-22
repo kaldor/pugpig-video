@@ -90,6 +90,9 @@
                 el.parentNode.innerHTML = this.offlineContent;
               }
             }
+            if ( inApp() && numVimeoEmbeds === 0  ) {
+              triggerSnapshotReady();
+            }
           },
           handleLoadEvent: function( numVimeoEmbeds ) {
             this.loaded++;
