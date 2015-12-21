@@ -153,7 +153,7 @@
           }
 
           // set up the online/offline status updating
-          if(isAndroid()){
+          if(isAndroid() && inApp()){
             //disable cache
             fetch('http://pugpig.com/favicon-16x16.png?timestamp=' + new Date().getTime());
             setInterval(function() { fetch('http://pugpig.com/favicon-16x16.png?timestamp=' + new Date().getTime()); } , 4000);
@@ -171,7 +171,7 @@
         }
 
         //onLine / offline detection for android
-        if(isAndroid()){
+        if(isAndroid() && inApp()){
           //disable cache
           fetch('http://pugpig.com/favicon-16x16.png?timestamp=' + new Date().getTime());
           window.addEventListener('connectionerror', function() {
