@@ -1,0 +1,308 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Brightcove Hello World</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="callbackWhenSnapshotFinished" content="loadVideos" />
+    <script type="text/javascript">
+		window.PUGPIG = {};
+	</script>
+    <style>
+		.pugpig-brightcove {
+			position: relative;
+			padding-top: 56.25%;
+		}
+
+		.pugpig-brightcove object,
+		.pugpig-brightcove iframe,
+		.pugpig-brightcove span {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+		}
+
+		.pugpig-brightcove__poster{
+		    height: 100%;
+			position: absolute;
+			top: 0;
+			background-color: black;
+		}
+
+      	.pugpig-brightcove__poster img{
+			width: 100%;
+			height: auto;
+			position: relative;
+		    top: 50%;
+   			transform: translateY(-50%);
+		}
+
+		.pp-is-offline .pugpig-brightcove__player {
+			display: none;
+		}
+
+		.pp-is-offline .pugpig-brightcove__poster {
+			display: block;
+		}
+
+		.is-hidden{
+			display: none;
+		}
+
+		body {
+			max-width: 1024px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+    </style>
+  </head>
+  <body>
+
+    <h1>Brightcove example</h1>
+
+    <h2>Example 1</h2>
+
+    <!-- <div class="pugpig-brightcove" data-video-id="3658535466001"></div> -->
+
+    <!-- <figure class="pugpig-brightcove" data-video-id="3658535466001">
+		<div class="pugpig-brightcove__poster">
+			<img src="http://placehold.it/1000x562" alt="">
+		</div>
+	</figure> -->
+
+	<figure data-image-nozoom class="pugpig-brightcove" data-video-id="3658535466001">
+		<div class="pugpig-brightcove__player"></div>
+		<div class="pugpig-brightcove__poster">
+			<img src="poster.jpg" alt="">
+		</div>
+	</figure>
+
+    <h2>Example 2</h2>
+	
+	<figure data-image-nozoom class="pugpig-brightcove" data-video-id="3658535465001">
+		<div class="pugpig-brightcove__player"></div>
+		<div class="pugpig-brightcove__poster">
+			<img src="poster.jpg" alt="">
+		</div>
+	</figure>
+    <!-- <div class="pugpig-brightcove" data-video-id="3658535465001"></div> -->
+
+    <script src="//admin.brightcove.com/js/BrightcoveExperiences.js"></script>
+
+    <script type="text/javascript">
+		// utilities
+		function inApp() {
+			return window.location.protocol.search(/http(s)?/) === -1;
+		}
+		function isOnline() {
+			//Works for everything except in app android
+			return window.navigator.onLine;
+		}
+		function setAppOffline() {
+			document.body.classList.add( 'pp-is-offline' );
+		}
+		function setAppOnline() {
+			document.body.className = document.body.className.replace('pp-is-offline', '');
+		}
+		function isAndroid(){
+			return navigator.userAgent.toLowerCase().indexOf('android') > -1;
+		}
+		function updateOnlineStatus(status) {
+			var currentlyOnline = status;
+			if(status === undefined){
+				currentlyOnline = navigator.onLine;
+			}
+			if (!PUGPIG.hasOwnProperty('isOnLine') || PUGPIG.isOnLine !== currentlyOnline ){
+				PUGPIG.isOnLine = currentlyOnline;
+				if (PUGPIG.isOnLine) {
+					setAppOnline();
+				} else {
+					setAppOffline();
+				}
+			}
+		}
+	</script>
+
+	<script type="text/javascript">
+		//online / offline detection for android in app
+		var maxWaitTime = 4000;
+		var fetch = function(url, callback) {
+			var xhr = new XMLHttpRequest();
+			var noResponseTimer = setTimeout(function() {
+				xhr.abort();
+				fireEvent('connectiontimeout', {});
+			}, maxWaitTime);
+			xhr.onreadystatechange = function(e) {
+				if (xhr.readyState != 4) {
+					return;
+				}
+				if (xhr.status == 200) {
+					clearTimeout(noResponseTimer);
+					fireEvent('goodconnection', {});
+				} else {
+					fireEvent('connectionerror', {});
+				}
+			};
+			xhr.open('GET', url);
+			xhr.send();
+		};
+		var fireEvent = function(name, data) {
+			var e = document.createEvent('Event');
+			e.initEvent(name, true, true);
+			e.data = data;
+			window.dispatchEvent(e);
+		};
+	</script>
+
+
+    <script>
+    	document.addEventListener('DOMContentLoaded', function(){
+			if(!inApp()){
+				loadVideos();
+			}
+		});
+
+		function loadVideos(){
+
+			//load the videos
+			var pugpigBrightcove = {
+				selector: '.pugpig-brightcove__player',
+				els: null,
+				apiKey: 'AQ~~,AAABDH-R__E~,dB4S9tmhdOr7qcd1PZnVrtGUlGnMHn1L',
+				defaultParams: [{
+					name: 'bgcolor',
+					value: '#FFFFFFF'
+				}, {
+					name: 'isVid',
+					value: true
+				}, {
+					name: 'isUI',
+					value: true
+				}, {
+					name: 'dynamicStreaming',
+					value: true
+				}, {
+					name: 'htmlFallback',
+					value: true
+				}, {
+					name: 'includeAPI',
+					value: true
+				}, {
+					name: 'templateLoadHandler',
+					value: 'onTemplateLoad'
+				}, {
+					name: 'templateReadyHandler',
+					value: 'onTemplateReady'
+				}],
+				getElementParams: function( el ) {
+					return this.defaultParams.concat([{
+						name: 'playerKey',
+						value: this.apiKey
+					}, {
+						name: '@videoPlayer',
+						value: el.parentNode.getAttribute( 'data-video-id' )
+					}]);
+				},
+				embedVideo: function( el, videoIndex ) {
+					var fragment = document.createDocumentFragment(),
+						object = document.createElement( 'object' ),
+						params = this.getElementParams( el ),
+						numParams = params.length,
+						param, i;
+
+					for( i = 0; i < numParams; i+=1 ) {
+						param = document.createElement( 'param' );
+						param.setAttribute( 'name', params[ i ].name );
+						param.setAttribute( 'value', params[ i ].value );
+						fragment.appendChild( param );
+					}
+
+					object.setAttribute( 'id', 'brightcove' + ( videoIndex + 1 ) );
+					object.className = 'BrightcoveExperience';
+					object.appendChild( fragment );
+
+					el.appendChild( object );
+				},
+				embedVideos: function( useOfflineContent ) {
+					var numBrightcoveEmbeds = this.els.length,
+						el, i;
+
+					for( i = 0; i < numBrightcoveEmbeds; i+=1 ) {
+						el = this.els[ i ];
+						this.embedVideo( el, i );
+
+					}
+					
+					this.initBrightcove();
+				},
+				initBrightcove: function() {
+					brightcove.createExperiences();
+					
+				},
+				init: function() {
+					this.els = document.querySelectorAll( this.selector );
+
+					this.embedVideos();
+
+					//Verify online status
+					if(isAndroid() && inApp()){
+						//disable cache
+						fetch('http://pugpig.com/favicon-16x16.png?timestamp=' + new Date().getTime());
+						setInterval(function() { fetch('http://pugpig.com/favicon-16x16.png?timestamp=' + new Date().getTime()); } , 4000);
+					}else{
+						// set up the online/offline status updating
+						// on IE8+ and FF3+
+						document.addEventListener('online',updateOnlineStatus);
+						document.addEventListener('offline', updateOnlineStatus);
+						// and a slow poll for the catch-all
+						setInterval(updateOnlineStatus, 4000);
+						// and update status immediately too
+						updateOnlineStatus();
+					}
+				}
+			};
+
+			//onLine / offline detection for android
+			if(isAndroid() && inApp()){
+				//disable cache
+				fetch('http://pugpig.com/favicon-16x16.png?timestamp=' + new Date().getTime());
+				window.addEventListener('connectionerror', function() {
+					updateOnlineStatus(false);
+				});
+				window.addEventListener('connectiontimeout', function() {
+					updateOnlineStatus(false);
+				});
+				window.addEventListener('goodconnection', function() {
+					updateOnlineStatus(true);
+				});
+			}else if(!isOnline()){
+				updateOnlineStatus(false);
+			}
+
+			pugpigBrightcove.init();
+			
+		}
+
+		var playerArray = [],
+		APIModules;
+
+		function onTemplateLoad(experienceID){
+			playerArray.push(brightcove.api.getExperience(experienceID));
+			APIModules = brightcove.api.modules.APIModules;
+		}
+
+		function onTemplateReady(evt){
+			var experienceId = evt.target.experience.id,
+				videoPoster = document.querySelector('#' + experienceId).parentNode.parentNode.querySelector('.pugpig-brightcove__poster');
+
+			console.log('onTemplateReady');
+			videoPoster.classList.add('is-hidden');
+		}
+
+    </script>
+
+  </body>
+</html>
